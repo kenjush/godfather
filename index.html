@@ -17,8 +17,8 @@
           <div class="big-item" style="margin-top:10%">{{current_player}}</div>
           <div class="big-item" v-show="show_role_flag" style="background-color:red;">{{current_role}}</div>
           <div class="big-button-div">
-              <button class="big-button" @click="unhideRole()">Show Role</button>
-              <button class="big-button" @click="showPlayer()">Next Player</button>
+              <button class="big-button" @click="unhideRole()" v-show="!show_role_flag">Show Role</button>
+              <button class="big-button" @click="showPlayer()" v-show="show_role_flag">Next Player</button>
           </div>
         </div>
         <h1>پدرخوانده</h1>
