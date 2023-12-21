@@ -80,6 +80,10 @@ var app = new Vue({
             this.show_role_flag = true
         },
         showRoles: function() {
+            if(this.players.length == 0){
+                alert("Add more players to start the game")
+                return
+            }
             this.show_role_overlay = true
             this.showPlayer()
         },
