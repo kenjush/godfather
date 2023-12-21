@@ -53,7 +53,7 @@ var app = new Vue({
                 if (this.roles.length > 0) {
                     const new_roles = this.roles.filter(x => this.isEmptyObj(x.player));
                     if (new_roles.length > 0) {
-                        const rndIndex = this.rndBetween(0, new_roles.length - 1);
+                        const rndIndex = this.rndBetween(0, new_roles.length);
                         const player = { name: this.new_player, role: new_roles[rndIndex] };
                         this.players.push(player);
                         new_roles[rndIndex].player = this.players[this.players.length - 1];
