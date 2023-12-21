@@ -1,12 +1,19 @@
 var app = new Vue({
     el: '#app',
     data: {
+        not_started: true,
+        show_role_overlay: false,
+        show_role_flag: false,
+        current_player: '',
+        current_role: '',
+        show_id: 0,
         new_player: '',
         new_role: '',
         players: [],
         roles: [],
-        default_roles_input_values: 'گادفادر، ناتو، گروگانگیر، مافیا، کاراگاه، پزشک، نگهبان، تفنگدار، تکاور، شهروند',
+        //default_roles_input_values: 'گادفادر، ناتو، گروگانگیر، مافیا، کاراگاه، پزشک، نگهبان، تفنگدار، تکاور، شهروند',
         // default_roles_input_values: 'Godfather, Mafia, Doctor, Detective, Armoured, Sniper, Citizen, Silencer, Natasha, Freemason, Terror, Negotiator, Reporter'
+        default_roles_input_values: 'Godfather, Matador, Saul Goodman, Doctor Watson, Leon, Citizen Kane, Constantine, Citizen, Citizen, Citizen, Nostradamus',
         default_roles_input: ''
     },
     created: function() {
@@ -69,6 +76,43 @@ var app = new Vue({
                 alert("Please select a role.");
             }
         },
+        unhideRole: function() {
+            this.show_role_flag = true
+        },
+        showRoles: function() {
+            this.show_role_overlay = true
+            this.showPlayer()
+        },
+        showPlayer: function() {
+            this.show_role_flag = false
+            if(this.show_id >= this.players.length){
+                alert("All players have seen their roles, ready to start the game?")
+                this.show_role_overlay = false
+                this.show_id = 0
+                this.not_started = false
+                return
+            }
+            this.current_player = this.players[this.show_id].name
+            this.current_role = this.players[this.show_id].role.name
+            this.show_id = this.show_id + 1
+            //this.showPlayer()
+        },
+        finishGame: function() {
+            if (confirm("Are your sure you want to finish? All roles will be reset") == false)
+                return
+            this.not_started = true
+            localStorage.removeItem("default_roles_input")
+            localStorage.removeItem("players")
+            localStorage.removeItem("roles")
+            this.load()
+        },
+        resetAll: function() {
+            this.not_started = true
+            localStorage.removeItem("default_roles_input")
+            localStorage.removeItem("players")
+            localStorage.removeItem("roles")
+            this.load()
+        },
         removeRole: function(index) {
             const player = this.roles[index].player;
             if (!this.isEmptyObj(player)) {
@@ -89,7 +133,8 @@ var app = new Vue({
             return Math.floor(Math.random() * max) + min;
         },
         load: function() {
-            const json_roles = JSON.parse(localStorage.getItem('roles')) || [];
+            const default_roles = '[{"name":"Godfather","player":-1},{"name":"Matador","player":-1},{"name":"Saul Goodman","player":-1},{"name":"Doctor Watson","player":-1},{"name":"Leon","player":-1},{"name":"Citizen Kane","player":-1},{"name":"Constantine","player":-1},{"name":"Citizen","player":-1},{"name":"Citizen","player":-1},{"name":"Citizen","player":-1},{"name":"Nostradamus","player":-1}]'
+            const json_roles = JSON.parse(localStorage.getItem('roles')) || JSON.parse(default_roles);
             const json_players = JSON.parse(localStorage.getItem('players')) || [];
             const default_roles_input = localStorage.getItem('default_roles_input') || this.default_roles_input_values;
             console.log(default_roles_input);
@@ -118,6 +163,7 @@ var app = new Vue({
             localStorage.setItem('roles', JSON.stringify(json_roles));
             localStorage.setItem('default_roles_input', this.default_roles_input);
             localStorage.setItem('players', JSON.stringify(json_players));
+            localStorage.setItem('not_started', this.not_started)
         },
         isEmptyObj: function(obj) {
             return Object.entries(obj).length === 0;
